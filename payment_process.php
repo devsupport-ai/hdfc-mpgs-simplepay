@@ -11,8 +11,8 @@
 
 */
 
-include "configuration.php";
-include "connection.php";
+include "payment_configuration.php";
+include "payment_connection.php";
 
 $amount = 500;
 
@@ -95,7 +95,7 @@ if ($merchantObj->GetDebug()) {
 
 // the receipt page is included and displayed here.
 // in your integration, you would most likely also want process the transaction response, and make appropriate updates
-// you can see how to parse and retrieve the results and other fields in the transaction at the top of receipt.php
-include "receipt.php";
+// you can see how to parse and retrieve the results and other fields in the transaction at the top of payment_receipt.php
+include "payment_receipt.php";
 
 ?>

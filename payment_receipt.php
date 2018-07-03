@@ -8,14 +8,14 @@ $result = "";
 $tmpArray = array();
 
 // [Snippet] howToDecodeResponse - start
-// $response is defined in process.php as the server response
+// $response is defined in payment_process.php as the server response
 $responseArray = json_decode($response, TRUE);
 // [Snippet] howToDecodeResponse - end
 
 // either a HTML error was received
 // or response is a curl error
 if ($responseArray == NULL) {
-    print("JSON decode failed. Please review server response (enable debug in configuration.php).");
+    print("JSON decode failed. Please review server response (enable debug in payment_configuration.php).");
     die();
 }
 

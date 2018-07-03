@@ -9,11 +9,11 @@ $configArray = array();
  configuration below.
  
  For merchants with multuple accounts/profiles, this example is designed so a 
- config array can be passed from process.php processing a transaction.
+ config array can be passed from payment_process.php processing a transaction.
  
  If you want to have multiple configuration sets, copy and paste
  the configuration lines and create a new array with a different variable name
- this array can then be parsed into the Merchant constructor from process.php
+ this array can then be parsed into the Merchant constructor from payment_process.php
 */
 
 
@@ -55,13 +55,13 @@ $configArray["certificateVerifyHost"] = 2;
 $configArray["gatewayUrl"] = "https://hdfcbank.test.gateway.mastercard.com/api/rest";
 
 // Merchant ID supplied by your payments provider
-$configArray["merchantId"] = "99141516";
+$configArray["merchantId"] = "{{=it.merchantName}}";
 
 // API username in the format below where Merchant ID is the same as above
-$configArray["apiUsername"] = "merchant.99141516";
+$configArray["apiUsername"] = "merchant.{{=it.merchantName}}";
 
 // API password which can be configured in Merchant Administration
-$configArray["password"] = "64a0ab9e14657c83463019b1a9a82619";
+$configArray["password"] = "{{=it.apiPassword}}";
 
 
 // The debug setting controls displaying the raw content of the request and 
@@ -71,7 +71,7 @@ $configArray["password"] = "64a0ab9e14657c83463019b1a9a82619";
 $configArray["debug"] = FALSE;
 
 // Version number of the API being used for your integration
-// this is the default value if it isn't being specified in process.php
+// this is the default value if it isn't being specified in payment_process.php
 $configArray["version"] = "13";
 
 /* 	

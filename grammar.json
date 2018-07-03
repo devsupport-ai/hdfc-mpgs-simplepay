@@ -2,35 +2,27 @@
   "name": "AmazonPay Android Integration",
   "variables": [
     {
-      "name": "generateSignatureUrl",
-      "label": "Url pointing to Signature generating script",
-      "description": "This Url is used to generate a new signature",
-      "help": "Example: https://mywebsite.com/generateSignature.php",
-      "stage": 1
+      "name": "apiPassword",
+      "label": "API Password",
+      "stage": 1,
+      "description": "API Password",
+      "help": "Get your API Password from HDFC account page"
     },
     {
-      "name": "verifySignatureUrl",
-      "label": "Url pointing to Signature verifying script",
-      "description": "This Url is used to verify signature",
-      "help": "Example: https://mywebsite.com/verifySignatureUrl.php",
-      "stage": 1
+      "name": "merchantName",
+      "label": "Merchant Name",
+      "stage": 1,
+      "description": "Merchant Name",
+      "help": "Get your Merchant Name from HDFC account page"
     }
   ],
   "variableValidations": [],
-  "captures": [
-    {
-      "fileSelector": ".+build.gradle$",
-      "regex": "applicationId [\"']([^\"]+)[\"']",
-      "extract": 1,
-      "name": "packageName"
-    }
-  ],
   "changes": [
     {
-      "name": "AmazonPay SDK",
-      "fileSelector": ".*build.gradle$",
+      "name": "HDFC Payment Form and Processor scripts",
+      "fileSelector": ".index.html",
       "changeType": "fileAdd",
-      "help": "Bot injects amazon payment code in these files.",
+      "help": "Bot injects HDFC payment code in these files.",
       "stage": 2,
       "fileType": "download",
       "change": [
@@ -40,21 +32,28 @@
           "url": "https://github.com/devsupport-ai/hdfc-mpgs-simplepay/archive/master.zip",
           "unzip": [
             {
-              "source": "hdfc-mpgs-simplepay-master/build.gradle",
-              "target": "/PayWithAmazon/"
+              "source": "hdfc-mpgs-simplepay-master/payment_configuration.php",
+              "target": "/"
             },
             {
-              "source": "hdfc-mpgs-simplepay-master/PayWithAmazon.aar",
-              "target": "/PayWithAmazon/"
+              "source": "hdfc-mpgs-simplepay-master/payment_connection.php",
+              "target": "/"
             },
             {
-              "source": "hdfc-mpgs-simplepay-master/ResponseProcessor.java",
-              "target": "/app/src/main/java/com/amazon/"
+              "source": "hdfc-mpgs-simplepay-master/pay_form.html",
+              "target": "/"
+            },
+            {
+              "source": "hdfc-mpgs-simplepay-master/payment_process.php",
+              "target": "/"
+            },
+            {
+              "source": "hdfc-mpgs-simplepay-master/payment_receipt.php",
+              "target": "/"
             }
           ]
         }
       ]
     }
-  ],
-  "reviewResultContent": "<div>\n  <h3 class=\"devblue\" style=\"font-size: 16px; font-weight: 700\">Hey, your Android integration is\n    done!</h3>\n  <div class=\"ui divider\"></div>\n  <br>\n  <div class=\"devblue\" style=\"font-size: 16px;\">Here's what you need to do in your\n    <b>\n      mainActivity.java\n    </b>\n    <br>\n    <div style=\"margin-top: 0.5em; margin-bottom: 1em;\">\n      <b>click on the amazon pay button to start transaction</b>\n    </div>\n  </div>\n</div>"
+  ]
 }
