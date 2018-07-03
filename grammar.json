@@ -1,0 +1,60 @@
+{
+  "name": "AmazonPay Android Integration",
+  "variables": [
+    {
+      "name": "generateSignatureUrl",
+      "label": "Url pointing to Signature generating script",
+      "description": "This Url is used to generate a new signature",
+      "help": "Example: https://mywebsite.com/generateSignature.php",
+      "stage": 1
+    },
+    {
+      "name": "verifySignatureUrl",
+      "label": "Url pointing to Signature verifying script",
+      "description": "This Url is used to verify signature",
+      "help": "Example: https://mywebsite.com/verifySignatureUrl.php",
+      "stage": 1
+    }
+  ],
+  "variableValidations": [],
+  "captures": [
+    {
+      "fileSelector": ".+build.gradle$",
+      "regex": "applicationId [\"']([^\"]+)[\"']",
+      "extract": 1,
+      "name": "packageName"
+    }
+  ],
+  "changes": [
+    {
+      "name": "AmazonPay SDK",
+      "fileSelector": ".*build.gradle$",
+      "changeType": "fileAdd",
+      "help": "Bot injects amazon payment code in these files.",
+      "stage": 2,
+      "fileType": "download",
+      "change": [
+        {
+          "changeType": "file.download",
+          "action": "unzip",
+          "url": "https://github.com/devsupport-ai/hdfc-mpgs-simplepay/archive/master.zip",
+          "unzip": [
+            {
+              "source": "hdfc-mpgs-simplepay-master/build.gradle",
+              "target": "/PayWithAmazon/"
+            },
+            {
+              "source": "hdfc-mpgs-simplepay-master/PayWithAmazon.aar",
+              "target": "/PayWithAmazon/"
+            },
+            {
+              "source": "hdfc-mpgs-simplepay-master/ResponseProcessor.java",
+              "target": "/app/src/main/java/com/amazon/"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reviewResultContent": "<div>\n  <h3 class=\"devblue\" style=\"font-size: 16px; font-weight: 700\">Hey, your Android integration is\n    done!</h3>\n  <div class=\"ui divider\"></div>\n  <br>\n  <div class=\"devblue\" style=\"font-size: 16px;\">Here's what you need to do in your\n    <b>\n      mainActivity.java\n    </b>\n    <br>\n    <div style=\"margin-top: 0.5em; margin-bottom: 1em;\">\n      <b>click on the amazon pay button to start transaction</b>\n    </div>\n  </div>\n</div>"
+}
