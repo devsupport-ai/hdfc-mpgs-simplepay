@@ -14,60 +14,61 @@
 include "configuration.php";
 include "connection.php";
 
+$amount = 500;
 
-// This is used to set the HTTP operation for sending the transaction
-// In your integration, you should never pass this in, but set the value here based on your requirements
-if (array_key_exists("method", $_POST))
-  $method = $_POST["method"];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $method = "PUT";
+    $orderId = 'order-' . bin2hex(openssl_random_pseudo_bytes(8));
+    $transactionId = 'transaction-' . bin2hex(openssl_random_pseudo_bytes(8));
+    $customUri .= "/order/" . $orderId;
+    $customUri .= "/transaction/" . $transactionId;
+    $merchantObj = new Merchant($configArray);
+    $parserObj = new Parser($merchantObj);
 
+    $expiry = $_POST['card_expiry'];
+    $expiryParts = explode("/", $expiry);
+    $cardMonth = $expiryParts[0];
+    $cardYear = $expiryParts[1];
 
-// The following section allows the example code to setup the custom/changing components to the URI
-// In your integration, you should never pass these in, but set the values here based on your requirements
-$customUri = "";
-if (array_key_exists("orderId", $_POST))
-  $customUri .= "/order/" . $_POST["orderId"];
+    $formData = [];
+    $formData["sourceOfFunds"] = [
+        "type" => "CARD",
+        "provided" => [
+            "card" => [
+                "number" => $_POST["card_number"],
+                "expiry" => [
+                    "month" => $cardMonth,
+                    "year" => $cardYear,
+                ],
+                "securityCode" => $_POST["card_cvv"],
+            ]
+        ]
+    ];
+    $formData["transaction"] = [
+        "amount" => $amount,
+        "currency" => "INR",
+    ];
+    $formData["order"] = [
+        "reference" => $orderId,
+    ];
+    $formData["apiOperation"] = "PAY";
 
-if (array_key_exists("transactionId", $_POST))
-  $customUri .= "/transaction/" . $_POST["transactionId"];
+    $request = $parserObj->ParseRequest($formData);
 
-
-// Add any HTML/$_POST field names that you want to unset to this array
-// If you have any other fields in the HTTP POST, you need to process them here and remove from $_POST
-// After this, $_POST should only contain fields that are being sent as part of the transaction
-$unsetNames = array("orderId", "transactionId", "submit", "method");
-
-// loop through each field in the unsetNames array
-// unset the field if the key exists
-foreach ($unsetNames as $fieldName) {
-  if (array_key_exists($fieldName, $_POST))
-    unset($_POST[$fieldName]);
-}
-
-// Creates the Merchant Object from config. If you are using multiple merchant ID's,
-// you can pass in another configArray each time, instead of using the one from configuration.php
-$merchantObj = new Merchant($configArray);
-
-// The Parser object is used to process the response from the gateway and handle the connections
-$parserObj = new Parser($merchantObj);
-
-// In your integration, you should never pass this in, but store the value in configuration
-// If you wish to use multiple versions, you can set the version as is being done below
-if (array_key_exists("version", $_POST)) {
-  $merchantObj->SetVersion($_POST["version"]);
-  unset($_POST["version"]);
+} else {
+    die("invalid request");
 }
 
 // form transaction request
-$request = $parserObj->ParseRequest($_POST);
 
 // if no post received from HTML page (parseRequest returns "" upon receiving an empty $_POST)
 if ($request == "")
-  die();
+    die();
 
 // print the request pre-send to server if in debug mode
 // this is used for debugging only. This would not be used in your integration, as DEBUG should be set to FALSE
 if ($merchantObj->GetDebug())
-  echo $request . "<br/><br/>";
+    echo $request . "<br/><br/>";
 
 // forms the requestUrl and assigns it to the merchantObj gatewayUrl member
 // returns what was assigned to the gatewayUrl member for echoing if in debug mode
@@ -75,7 +76,7 @@ $requestUrl = $parserObj->FormRequestUrl($merchantObj, $customUri);
 
 // this is used for debugging only. This would not be used in your integration, as DEBUG should be set to FALSE
 if ($merchantObj->GetDebug())
-  echo $requestUrl . "<br/><br/>";
+    echo $requestUrl . "<br/><br/>";
 
 
 // attempt sending of transaction
@@ -85,10 +86,10 @@ $response = $parserObj->SendTransaction($merchantObj, $request, $method);
 // print response received from server if in debug mode
 // this is used for debugging only. This would not be used in your integration, as DEBUG should be set to FALSE
 if ($merchantObj->GetDebug()) {
-  // replace the newline chars with html newlines
-  $response = str_replace("\n", "<br/>", $response);
-  echo $response . "<br/><br/>";
-  die();
+    // replace the newline chars with html newlines
+    $response = str_replace("\n", "<br/>", $response);
+    echo $response . "<br/><br/>";
+    die();
 }
 
 
