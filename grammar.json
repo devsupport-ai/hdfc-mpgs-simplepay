@@ -14,6 +14,55 @@
       "stage": 1,
       "description": "Merchant Name",
       "help": "Get your Merchant Name from HDFC account page"
+    },
+    {
+      "name": "hostname",
+      "label": "Mysql Database Hostname",
+      "stage": 2,
+      "description": "Mysql Server Hostname with port",
+      "help": "For audit purpose"
+    },
+    {
+      "name": "database",
+      "label": "Mysql Database Name",
+      "stage": 2,
+      "description": "Mysql Server Name",
+      "help": "For audit purpose"
+    },
+    {
+      "name": "username",
+      "label": "Mysql Username",
+      "stage": 2,
+      "description": "Mysql Server Username",
+      "help": "For audit purpose"
+    },
+    {
+      "name": "password",
+      "label": "Mysql Password",
+      "stage": 2,
+      "description": "Mysql Server Password",
+      "help": "For audit purpose"
+    },
+    {
+      "name": "transactionsTableName",
+      "label": "Transactions table name",
+      "stage": 3,
+      "description": "Table which records the transactions",
+      "help": "For audit purpose"
+    },
+    {
+      "name": "transactionIdColumnName",
+      "label": "Transactions table column name for Transaction ID",
+      "stage": 3,
+      "description": "Column which records the transaction id",
+      "help": "For audit purpose"
+    },
+    {
+      "name": "amountColumnName",
+      "label": "Transactions table column name for Amount",
+      "stage": 3,
+      "description": "Column which records the amount",
+      "help": "For audit purpose"
     }
   ],
   "variableValidations": [],
@@ -23,7 +72,7 @@
       "fileSelector": ".index.html",
       "changeType": "fileAdd",
       "help": "Bot injects HDFC payment code in these files.",
-      "stage": 2,
+      "stage": 4,
       "fileType": "download",
       "change": [
         {
@@ -49,6 +98,10 @@
             },
             {
               "source": "hdfc-mpgs-simplepay-master/payment_receipt.php",
+              "target": "/"
+            },
+            {
+              "source": "hdfc-mpgs-simplepay-master/payment_audit.php",
               "target": "/"
             }
           ]
