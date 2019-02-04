@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 $dbConfig = array();
 
 $dbConfig["hostname"] = "{{=it.hostname}}";
@@ -48,7 +48,6 @@ $mysqli = new mysqli($dbConfig["hostname"], $dbConfig["username"], $dbConfig["pa
 
 /* check connection */
 if ($mysqli->connect_errno) {
-    printf("Connect failed: %s\n", $mysqli->connect_error);
     $response["message"] = "Failed to connect to the database";
     printf(json_encode($response));
     exit();
